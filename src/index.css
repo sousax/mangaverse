@@ -1,0 +1,20 @@
+:root {
+  font-family: "Asap Condensed", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+
+  --color-primary: #000e20;
+  --color-background: #00060e;
+  --color-secondary: #f9f9f9;
+  --color-tertiary: #058def;
+  --color-text: white;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}

@@ -1,0 +1,109 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-around;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+.sectNovel {
+  color: var(--color-secondary);
+  display: flex;
+  flex-direction: column;
+  margin: 0 20px;
+}
+.title_heder {
+  display: flex;
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  align-items: center;
+}
+
+.title_heder h3 {
+  margin-left: 10px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 colunas */
+}
+
+.grid-item {
+  position: relative;
+  overflow: hidden;
+  padding: 8px;
+  text-align: center;
+  border: none;
+}
+
+.image_container {
+  position: relative;
+  width: 100%;
+  height: 220px; /* Define a altura fixa */
+}
+
+.image_container img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Garante que a imagem cubra o contêiner sem distorcer */
+  cursor: pointer;
+}
+
+.image_container h3 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 10px;
+  color: white;
+  background: linear-gradient(
+    to top,
+    rgba(7, 0, 112, 0.9),
+    /* Aumenta a opacidade para 0.9 */ rgba(0, 2, 116, 0.5)
+      /* Aumenta a opacidade para 0.5 */
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.image_container:hover h3 {
+  opacity: 1;
+}
+
+.rankingSect {
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+}
+
+.leftSection {
+  display: flex;
+  color: #ffffff;
+  margin-right: 100px;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.ranking {
+  background-color: var(--color-primary);
+  width: 100%;
+  height: 420px;
+  border: 1px solid #058def;
+  align-items: center;
+  justify-content: center;
+}
+
+.ranking ol {
+  list-style: none; /* Remove os marcadores da lista */
+  padding: 0;
+}
+
+.ranking li {
+  margin: 10px 0; /* Espaçamento entre os itens da lista */
+  text-align: center; /* Centraliza o texto dos itens */
+}

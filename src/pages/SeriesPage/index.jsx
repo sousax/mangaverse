@@ -1,63 +1,107 @@
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import WTN from "../../img/WTN.jpg";
-import Eyes from "../../assets/eyes.svg";
-import Troph from "../../assets/troph.svg";
-import King from "../../img/banner-knight.png";
-import styles from "./Page.module.css";
+import { useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import { useApi, STATUS, TYPE } from "../../api";
+import styles from "./SeriesPage.module.css";
+
+const date = new Intl.DateTimeFormat("pt-BR", { dateStyle: "short" });
+
 function SeriesPage() {
+  const { id } = useParams();
+  const { data: s, error } = useApi(`/api/manga/${id}`);
+  const [fav, setFav] = useState(false);
+
+  if (error) return <p className="wrap empty">{error.message}</p>;
+  if (!s) return <div className={`wrap skeleton ${styles.loading}`} />;
+
+  const first = s.chapters.at(-1);
+  const info = [
+    ["Tipo", TYPE[s.originalLanguage]],
+    ["Ano", s.year],
+    ["Status", STATUS[s.status]],
+    ["Autor", s.authors.join(", ")],
+    ["Artista", s.artists.join(", ")],
+  ].filter(([, v]) => v);
+
   return (
     <>
-      <Header />
-      <section className={styles.container}>
-        <div className="image-container">
-          <img src={WTN} alt="WTN" className={styles.capa} />
-        </div>
-        <div className={styles.info_description}>
-          <h2>O Recomeço de um Noob</h2>
-          <div className={styles.firstLine}>
-            <img src={Eyes} alt="views" />
-            <p>Visualizações: 203.2k</p>
-            <img src={Troph} alt="rank" />
-            <p>Rank: 6º</p>
-          </div>
-          <div className={styles.genres}>
-            <button>Ação</button>
-            <button>Aventura</button>
-            <button>Regressão</button>
-            <button>Comédia</button>
-            <button>Fantasia</button>
-            <button>Shounen</button>
-          </div>
-          <div className={styles.infos}>
-            <p>Alternativa: Worn and Torn Newbie</p>
-            <p>Ano: 2021</p>
-            <p>Status: Em andamento</p>
-            <p>Tipo: Manhwa</p>
-            <p>Autor: Step on Leggo</p>
-            <p>Artista: Step on Leggo</p>
-            <h4>Sinopse:</h4>
-          </div>
-          <div className={styles.sinopse}>
-            <p>
-              Do mesmo autor de [Revenge of The Iron-Blooded Sword Hound!] 15
-              anos até o fim do jogo, e apenas eu sei como termina.” “Eu sou um
-              dos viciados”
-            </p>
+      <section className={styles.hero}>
+        {s.cover && <div className={styles.backdrop} style={{ backgroundImage: `url(${s.cover})` }} />}
+        <div className={`wrap ${styles.inner}`}>
+          {s.cover && <img className={styles.cover} src={s.cover} alt={s.title} />}
+          <div className={styles.body}>
+            <Link to="/catalogo" className={styles.back}>
+              ← Catálogo
+            </Link>
+            <h1 className="display">{s.title}</h1>
+            <ul className={styles.stats}>
+              <li>
+                <strong>{s.chapters.length}</strong> capítulos em pt-br
+              </li>
+              {s.chapters[0] && (
+                <li>
+                  Atualizado em <strong>{date.format(new Date(s.chapters[0].readableAt))}</strong>
+                </li>
+              )}
+            </ul>
+            <ul className={styles.genres}>
+              {s.tags.map((g) => (
+                <li key={g}>{g}</li>
+              ))}
+            </ul>
+            {s.description && <p className={styles.synopsis}>{s.description}</p>}
+            <div className={styles.ctas}>
+              {first && (
+                <Link to={`/ler/${first.id}`} className="btn btn-primary">
+                  Ler capítulo {first.chapter ?? "único"}
+                </Link>
+              )}
+              <button className={`btn ${fav ? styles.faved : ""}`} aria-pressed={fav} onClick={() => setFav(!fav)}>
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z" />
+                </svg>
+                {fav ? "Favoritado" : "Favoritar"}
+              </button>
+            </div>
+            {info.length > 0 && (
+              <dl className={styles.info}>
+                {info.map(([k, v]) => (
+                  <div key={k}>
+                    <dt>{k}</dt>
+                    <dd>{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            )}
           </div>
         </div>
       </section>
-      <section className={styles.buttonsContainer}>
-        <button>Ler Agora</button>
-        <button>Favoritar</button>
-        <button>Ler Depois</button>
+
+      <section className="wrap">
+        <header className="section-head">
+          <span>{s.chapters.length}</span>
+          <h2 className="display">Capítulos</h2>
+        </header>
+        {s.chapters.length ? (
+          <ol className={styles.chapters}>
+            {s.chapters.map((c, i) => (
+              <li key={c.id} className="reveal">
+                <Link to={`/ler/${c.id}`}>
+                  <span>
+                    Capítulo {c.chapter ?? "único"}
+                    {i === 0 && <em>Novo</em>}
+                  </span>
+                  <small>{c.group}</small>
+                </Link>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <div className="empty">
+            <strong className="display">Sem capítulos</strong>
+            Esta obra não tem capítulos em português disponíveis no MangaDex, geralmente por ser licenciada.
+          </div>
+        )}
       </section>
-      <section className={styles.capContainer}>
-        <div className="cap_container">
-          <h2>Capítulos</h2>
-        </div>
-      </section>
-      <Footer />
     </>
   );
 }

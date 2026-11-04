@@ -1,13 +1,15 @@
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-
 function NovelsEng() {
   return (
-    <>
-      <Header />
-      <h1>Novels em Inglês</h1>
-      <Footer />
-    </>
+    <div className="wrap">
+      <header className="page-head">
+        <p>In English</p>
+        <h1 className="display">Novels EN</h1>
+      </header>
+      <div className="empty">
+        <strong className="display">Em breve</strong>
+        Estamos preparando as primeiras traduções. Volte logo.
+      </div>
+    </div>
   );
 }
 

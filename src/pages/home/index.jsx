@@ -1,150 +1,81 @@
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import book from "../../assets/book-open-text.svg";
-import flame from "../../assets/flame.svg";
-import WTN from "../../img/WTN.jpg";
-import Blink from "../../img/MagicAcademysGeniusBlinkerCover03CUnetauto_scaleLevel3width-2000.jpg";
-import Demonic from "../../img/DE.jpg";
-import Lookism from "../../img/capa.jpg";
-import Hua from "../../img/cover-1-1-1.jpg";
-import Sword from "../../img/swordmastersyoungestCover02.png";
 import { Link } from "react-router-dom";
-import "./index.css";
+import SeriesCard, { CardSkeletons } from "../../components/SeriesCard";
+import { useApi } from "../../api";
+import styles from "./Home.module.css";
+
+const fmt = new Intl.NumberFormat("pt-BR", { notation: "compact" });
 
 function Home() {
+  const latest = useApi("/api/list?order=latest&limit=12");
+  const popular = useApi("/api/list?order=popular&limit=8");
+  const featured = popular.data?.items[0];
+
   return (
     <>
-      <Header />
-      <section className="container">
-        <div className="sectNovel">
-          <div className="title_heder">
-            <img src={book} alt="book" />
-            <h2>Lançamentos Manhuas</h2>
-          </div>
+      <section className={styles.hero}>
+        {featured?.cover && <div className={styles.backdrop} style={{ backgroundImage: `url(${featured.cover})` }} />}
+        <div className={`wrap ${styles.heroInner}`}>
+          {featured ? (
+            <>
+              <div className={styles.heroText}>
+                <p className={styles.kicker}>Mais seguido</p>
+                <h1 className="display">{featured.title}</h1>
+                <p className={styles.meta}>{featured.tags.slice(0, 3).join(" · ")}</p>
+                <p className={styles.synopsis}>{featured.description}</p>
+                <div className={styles.ctas}>
+                  <Link to={`/series/${featured.id}`} className="btn btn-primary">
+                    Ver capítulos
+                  </Link>
+                </div>
+              </div>
+              <Link to={`/series/${featured.id}`} className={styles.heroCover}>
+                <img src={featured.cover} alt={featured.title} />
+              </Link>
+            </>
+          ) : popular.error ? (
+            <p className="empty">{popular.error.message}</p>
+          ) : (
+            <div className={`skeleton ${styles.heroSkeleton}`} />
+          )}
+        </div>
+      </section>
 
-          <div className="grid-container">
-            <article className="grid-item">
-              <div className="image_container">
-                <Link to="series">
-                  <img src={WTN} alt="WTN" />
+      <div className={`wrap ${styles.columns}`}>
+        <section>
+          <header className="section-head">
+            <span>01</span>
+            <h2 className="display">Atualizados</h2>
+          </header>
+          {latest.error ? (
+            <p className="empty">{latest.error.message}</p>
+          ) : (
+            <div className={styles.grid}>
+              {latest.data ? latest.data.items.map((s) => <SeriesCard key={s.id} series={s} />) : <CardSkeletons />}
+            </div>
+          )}
+        </section>
 
-                  <h3>O Recomeço de um Noob</h3>
+        <aside>
+          <header className="section-head">
+            <span>02</span>
+            <h2 className="display">Ranking</h2>
+          </header>
+          <ol className={styles.ranking}>
+            {popular.data?.items.map((s, i) => (
+              <li key={s.id} className="reveal">
+                <Link to={`/series/${s.id}`}>
+                  <span className="display">{String(i + 1).padStart(2, "0")}</span>
+                  <img src={s.cover} alt="" loading="lazy" />
+                  <div>
+                    <strong>{s.title}</strong>
+                    <small>{fmt.format(s.follows)} seguidores</small>
+                  </div>
                 </Link>
-              </div>
-            </article>
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={Blink} alt="Blink" />
-                <h3>Gênio do Teletransporte</h3>
-              </div>
-            </article>
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={Demonic} alt="Demonic Evolution" />
-                <h3>Demonic Evolution</h3>
-              </div>
-            </article>
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={Lookism} alt="Lookism" />
-                <h3>Aparências</h3>
-              </div>
-            </article>
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={Hua} alt="Mount-Hua" />
-                <h3>O Retorno da Seita do Monte Hua</h3>
-              </div>
-            </article>
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={Sword} alt="Sword" />
-                <h3>Swordmaster</h3>
-              </div>
-            </article>
-          </div>
-        </div>
-        <div className="rankingSect">
-          <div className="leftSection">
-            <img src={flame} alt="flame" />
-            <h3>Ranking MANHUAS</h3>
-          </div>
-          <div className="ranking">
-            <ol>
-              <li>WTN</li>
-              <li>Gênio do Teletransporte</li>
-              <li>Demonic Evolution</li>
-              <li>Aparências</li>
-              <li>O Retorno da Seita do Monte Hua</li>
-              <li>Swordmaster</li>
-            </ol>
-          </div>
-        </div>
-      </section>
-      <section className="container">
-        <div className="sectNovel">
-          <div className="title_heder">
-            <img src={book} alt="book" />
-            <h2>Lançamentos Manhuas</h2>
-          </div>
-
-          <div className="grid-container">
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={WTN} alt="WTN" />
-                <h3>O Recomeço de um Noob</h3>
-              </div>
-            </article>
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={Blink} alt="Blink" />
-                <h3>Gênio do Teletransporte</h3>
-              </div>
-            </article>
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={Demonic} alt="Demonic Evolution" />
-                <h3>Demonic Evolution</h3>
-              </div>
-            </article>
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={Lookism} alt="Lookism" />
-                <h3>Aparências</h3>
-              </div>
-            </article>
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={Hua} alt="Mount-Hua" />
-                <h3>O Retorno da Seita do Monte Hua</h3>
-              </div>
-            </article>
-            <article className="grid-item">
-              <div className="image_container">
-                <img src={Sword} alt="Sword" />
-                <h3>Swordmaster</h3>
-              </div>
-            </article>
-          </div>
-        </div>
-        <div className="rankingSect">
-          <div className="leftSection">
-            <img src={flame} alt="flame" />
-            <h3>Ranking MANHUAS</h3>
-          </div>
-          <div className="ranking">
-            <ol>
-              <li>WTN</li>
-              <li>Gênio do Teletransporte</li>
-              <li>Demonic Evolution</li>
-              <li>Aparências</li>
-              <li>O Retorno da Seita do Monte Hua</li>
-              <li>Swordmaster</li>
-            </ol>
-          </div>
-        </div>
-      </section>
-      <Footer />
+              </li>
+            ))}
+          </ol>
+        </aside>
+      </div>
     </>
   );
 }

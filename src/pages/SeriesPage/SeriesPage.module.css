@@ -1,0 +1,213 @@
+.hero {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  margin-top: -72px;
+  padding: 128px 0 72px;
+  margin-bottom: 32px;
+}
+.backdrop {
+  position: absolute;
+  inset: -40px;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  filter: blur(48px) saturate(1.3);
+  opacity: 0.35;
+}
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to bottom, transparent 30%, var(--ink));
+}
+
+.inner {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+.cover {
+  width: 100%;
+  aspect-ratio: 7 / 10;
+  object-fit: cover;
+  box-shadow: 0 30px 70px -20px rgb(0 0 0 / 0.8), 0 0 0 1px rgb(255 255 255 / 0.08);
+  animation: cover-in 0.9s var(--ease-out) both;
+}
+
+.body > * {
+  animation: rise 0.8s var(--ease-out) both;
+}
+.body > :nth-child(2) { animation-delay: 0.06s; }
+.body > :nth-child(3) { animation-delay: 0.12s; }
+.body > :nth-child(4) { animation-delay: 0.18s; }
+.body > :nth-child(5) { animation-delay: 0.24s; }
+.body > :nth-child(n + 6) { animation-delay: 0.3s; }
+
+.back {
+  display: inline-block;
+  color: var(--muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: color 0.2s, transform 0.3s var(--ease-out);
+}
+.back:hover {
+  color: var(--paper);
+  transform: translateX(-4px);
+}
+
+.body h1 {
+  margin-top: 12px;
+  font-size: clamp(2.6rem, 6vw, 5rem);
+}
+
+.stats {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin-top: 18px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.stats strong {
+  color: var(--paper);
+  font-weight: 600;
+}
+
+.genres {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+.genres li {
+  padding: 5px 12px;
+  border: 1px solid var(--line);
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.synopsis {
+  margin-top: 22px;
+  max-width: 62ch;
+  line-height: 1.7;
+  color: rgb(242 239 233 / 0.85);
+  white-space: pre-line;
+}
+
+.ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+.ctas svg {
+  width: 16px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  transition: fill 0.2s, transform 0.4s var(--ease-out);
+}
+.faved {
+  border-color: var(--red);
+  color: var(--red);
+}
+.faved svg {
+  fill: var(--red);
+  transform: scale(1.15);
+}
+
+.info {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 20px;
+  margin-top: 36px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+.info dt {
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.info dd {
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.chapters {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 8px;
+}
+.chapters a {
+  display: grid;
+  gap: 4px;
+  padding: 14px 18px;
+  background: var(--ink-2);
+  border: 1px solid var(--line);
+  font-weight: 500;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s var(--ease-out);
+}
+.chapters a:hover {
+  border-color: var(--red);
+  background: var(--ink-3);
+  transform: translateY(-2px);
+}
+.chapters span {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chapters small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.chapters em {
+  font-style: normal;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--red);
+}
+
+.loading {
+  height: 520px;
+  margin-top: 40px;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+@keyframes cover-in {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.96);
+  }
+}
+
+@media (max-width: 760px) {
+  .inner {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+  .cover {
+    width: 200px;
+  }
+}
